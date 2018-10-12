@@ -5,23 +5,30 @@ resources:
     uri: https://github.com/emerald-squad/sonar-scanner.git
     branch: 'master'
 
-- name: docker-hub
+- name: docker-hub-version
   type: docker-image
   source:
     repository: emeraldsquad/sonar-scanner-test
     username: ((docker-hub-username))
     password: ((docker-hub-password))
-    tag: "1.0.3"
+    tag: "1.0.4"
+
+
+- name: docker-hub-latest
+  type: docker-image
+  source:
+    repository: emeraldsquad/sonar-scanner-test
+    username: ((docker-hub-username))
+    password: ((docker-hub-password))
 
 jobs:
 - name: publish
   plan:
   - aggregate:
     - get: sonar-scanner-source
-  - put: docker-hub
+  - put: docker-hub-version
     params:
       build: sonar-scanner-source
-      tag: sonar-scanner-source/version
       tag_as_latest: false
 
 - name: tag-as-latest
@@ -29,10 +36,10 @@ jobs:
   - aggregate:
     - get: sonar-scanner-source
       passed: [ publish ]
-    - get: docker-hub
+    - get: docker-hub-version
       params:
         save: true
-  - put: docker-hub
+  - put: docker-hub-latest
     params:
-      load: docker-hub
+      load: docker-hub-version
 

@@ -31,5 +31,8 @@ jobs:
     - get: docker-hub
       params:
         tag: sonar-scanner-source/version
+        save: true
   - put: docker-hub
+    params:
+      load: docker-hub
 

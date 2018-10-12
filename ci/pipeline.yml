@@ -20,7 +20,7 @@ jobs:
   - put: docker-hub
     params:
       build: sonar-scanner-source
-      tag_file: sonar-scanner-source/version
+      tag: sonar-scanner-source/version
       tag_as_latest: false
 
 - name: tag-as-latest
@@ -32,5 +32,4 @@ jobs:
       params:
         tag: sonar-scanner-source/version
   - put: docker-hub
-    params:
-      tag: latest
+

@@ -8,16 +8,16 @@ resources:
 - name: docker-hub-version
   type: docker-image
   source:
-    repository: emeraldsquad/sonar-scanner-test
+    repository: emeraldsquad/sonar-scanner
     username: ((docker-hub-username))
     password: ((docker-hub-password))
-    tag: "1.0.4"
+    tag: {{imageversion}}
 
 
 - name: docker-hub-latest
   type: docker-image
   source:
-    repository: emeraldsquad/sonar-scanner-test
+    repository: emeraldsquad/sonar-scanner
     username: ((docker-hub-username))
     password: ((docker-hub-password))
 

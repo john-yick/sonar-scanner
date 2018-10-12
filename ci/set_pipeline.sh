@@ -3,8 +3,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ALIAS=${1:-emerald-squad}
-CREDENTIALS=${2:-$DIR/params.sample.yml}
+PARAMS=${2:-$DIR/params.yml}
 PIPELINE_NAME=${3:-sonar-scanner}
 
-echo y | fly -t "${ALIAS}" sp -p "${PIPELINE_NAME}" -c $DIR/pipeline.yml -l "${CREDENTIALS}"
-fly -t "$ALIAS" expose-pipeline -p "$PIPELINE_NAME"
+fly -t "${ALIAS}" sp -p "${PIPELINE_NAME}" -c $DIR/pipeline.yml -l "${PARAMS}" --non-interactive 
+

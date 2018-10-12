@@ -1,10 +1,11 @@
 FROM openjdk:8-jre-alpine
 
-ENV SONAR_SCANNER_VERSION 3.0.3.778
+ENV SONAR_SCANNER_VERSION 3.2.0.1227
 
-RUN apk add --update nodejs nodejs-npm
+RUN apk add --update nodejs nodejs-npm zip
 
-ADD https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip /tmp/sonar-scanner-cli-3.0.3.778-linux.zip
-RUN unzip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip -d /usr/lib && \
-    sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /usr/lib/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin/sonar-scanner && \
-    ln -s /usr/lib/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin/sonar-scanner /usr/bin/sonar-scanner
+ADD https://bintray.com/sonarsource/SonarQube/download_file?file_path=org%2Fsonarsource%2Fscanner%2Fcli%2Fsonar-scanner-cli%2F${SONAR_SCANNER_VERSION}%2Fsonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip
+
+RUN unzip /tmp/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip -d /usr/lib && \
+    ln -s /usr/lib/sonar-scanner-${SONAR_SCANNER_VERSION}/bin/sonar-scanner /usr/bin/sonar-scanner
+

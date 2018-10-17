@@ -4,17 +4,22 @@ resources:
   source: 
     uri: https://github.com/emerald-squad/sonar-scanner.git
     branch: 'master'
+    ignore_paths:
+    - README.md
+    - VERSION
+    - ci/pipeline.yml
 
-- name: docker-hub-version
-  type: docker-image
-  source:
-    repository: emeraldsquad/sonar-scanner
-    username: ((docker-hub-username))
-    password: ((docker-hub-password))
-    tag: {{imageversion}}
+- name: version
+  type: semver
+  source: 
+    driver: git
+    uri: git@github.com:emerald-squad/sonar-scanner.git
+    branch: 'master'
+    file: VERSION
+    private_key: ((github-key))
 
 
-- name: docker-hub-latest
+- name: docker-hub
   type: docker-image
   source:
     repository: emeraldsquad/sonar-scanner
@@ -24,11 +29,15 @@ resources:
 jobs:
 - name: publish
   plan:
-  - aggregate:
-    - get: sonar-scanner-source
-  - put: docker-hub-version
+  - get: sonar-scanner-source
+    trigger: true
+  - put: version
+    params:
+      bump: patch
+  - put: docker-hub
     params:
       build: sonar-scanner-source
+      tag: version/version
       tag_as_latest: false
 
 - name: tag-as-latest
@@ -36,10 +45,11 @@ jobs:
   - aggregate:
     - get: sonar-scanner-source
       passed: [ publish ]
-    - get: docker-hub-version
+    - get: docker-hub
+      passed: [ publish ]
       params:
         save: true
-  - put: docker-hub-latest
+  - put: docker-hub
     params:
-      load: docker-hub-version
-
+      load: docker-hub
+      tag_as_latest: true
